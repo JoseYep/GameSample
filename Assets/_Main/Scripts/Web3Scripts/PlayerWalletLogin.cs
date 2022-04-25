@@ -28,8 +28,6 @@ public class PlayerWalletLogin : MonoBehaviour
 
     private void Awake()
     {
-        connectButton.interactable = false;
-
         if (loggedIn)
         {
             accesBlocker.SetActive(false);
@@ -67,6 +65,7 @@ public class PlayerWalletLogin : MonoBehaviour
  
         loggedIn = true;
         accesBlocker.SetActive(false);
+        connectButton.gameObject.SetActive(false);
     }
 
     

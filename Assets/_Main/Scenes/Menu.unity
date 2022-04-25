@@ -397,7 +397,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   accesBlocker: {fileID: 1409427665}
   connectButton: {fileID: 1357878425}
-  needLogin: 0
+  needLogin: 1
 --- !u!1 &554142296
 GameObject:
   m_ObjectHideFlags: 0
@@ -833,8 +833,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 79244005}
-  m_Father: {fileID: 1409427666}
-  m_RootOrder: 0
+  m_Father: {fileID: 2093776290}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -884,7 +884,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1357878426}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 529561891}
+        m_TargetAssemblyTypeName: PlayerWalletLogin, Assembly-CSharp
+        m_MethodName: OnLogin
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1357878426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,7 +910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.42607686, g: 0.9528302, b: 0.49898195, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -951,8 +963,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1357878424}
+  m_Children: []
   m_Father: {fileID: 2093776290}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -974,8 +985,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.20416987, g: 0.16776435, b: 0.23584908, a: 0.7019608}
-  m_RaycastTarget: 1
+  m_Color: {r: 0.20416987, g: 0.16776435, b: 0.23584908, a: 0.77254903}
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1154,7 +1165,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6383364771761701887, guid: 6d312a3f1202f4c4d8876fe74a7068fb, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6383364771761701887, guid: 6d312a3f1202f4c4d8876fe74a7068fb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1469,6 +1480,7 @@ RectTransform:
   - {fileID: 1052666750}
   - {fileID: 2070639986}
   - {fileID: 1409427666}
+  - {fileID: 1357878424}
   - {fileID: 1674720586}
   m_Father: {fileID: 0}
   m_RootOrder: 2
