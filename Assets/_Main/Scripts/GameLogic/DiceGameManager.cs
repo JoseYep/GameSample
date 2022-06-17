@@ -19,15 +19,20 @@ public class DiceGameManager : MonoBehaviourPunCallbacks
     [SerializeField] private UIRoundHandler roundHandler;
     [SerializeField] private TextMeshProUGUI resultText;
 
+    [Header("Smart Contracts")]
+    [SerializeField] private GameSmartContract smartContract;
+
     [Header("UI")]
     [SerializeField] private Button rollButton;
+    [SerializeField] private UIEndScreen endScene;
 
     private PlayerNetworkAgent playerNetworkAgent;
     private PlayerNetworkAgent opponentNetworkAgent;
 
     private GameObject localPlayerDice;
     private GameObject localOpponentDice;
-    
+
+    private bool playersSet = false;
     private int maxRounds = 3;
     private bool localWinner = false;
     private bool gameOver = false;
@@ -35,11 +40,22 @@ public class DiceGameManager : MonoBehaviourPunCallbacks
     private int actualRound = 0;
     private int playerRoundsWinned = 0;
     private int opponentRoundsWinned = 0;
-    
+
+    public bool PlayersSet { get => playersSet; set => playersSet = value; }
+
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
-        SpawnPlayer();
+        while (true)
+        {
+            if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+            {
+                SpawnPlayer();
+                break;
+            }
+
+            yield return null;
+        }     
     }
 
     private void SpawnPlayer()
@@ -103,23 +119,35 @@ public class DiceGameManager : MonoBehaviourPunCallbacks
     private IEnumerator GameOver()
     {
         rollButton.interactable = false;
-
+     
         if (localWinner)
         {
             resultText.text = "YOU WIN";
-            //Notify contract i loose
+
+            //Notify contract i win
+            endScene.Loser = opponentNetworkAgent.Account;
+            endScene.Winner = playerNetworkAgent.Account;
+            endScene.EndMatch(true);
+
+            //Debug.Log("Winner wallet: " + playerNetworkAgent.Account);
+            //Debug.Log("Loser wallet: " + opponentNetworkAgent.Account);
+
+            //smartContract.Claim(playerNetworkAgent.Account, opponentNetworkAgent.Account, 0);
         }
         else
         {
-            resultText.text = "YOU LOOSE";
-            //Notify contract i win
+            resultText.text = "YOU LOSE";
+            //Notify contract i lose
+            endScene.EndMatch(false);
+
         }
+
         yield return new WaitForSeconds(gameFinishDelay);
         
-        if (SceneChanger.instance)
-        {
-            SceneChanger.instance.LeaveAndCahngeScene(0);
-        }
+        //if (SceneChanger.instance)
+        //{
+        //    SceneChanger.instance.LeaveAndCahngeScene(0);
+        //}
     }
 
     public void PlayerReady(GameObject obj)
@@ -145,10 +173,27 @@ public class DiceGameManager : MonoBehaviourPunCallbacks
         }
         else 
         {
+            //Clean opponent 
+            if (localOpponentDice)
+            {
+                Destroy(localOpponentDice);
+                opponentNetworkAgent = null;
+            }
+
             localOpponentDice = Instantiate(dicePrefab, opponentSpawn.position, Quaternion.identity);
             localOpponentDice.name = "OpponentDice";
             obj.name = "OpponentAgent";
             opponentNetworkAgent = agent;
+        }
+
+        //Checkt if players created
+        if (localOpponentDice && localPlayerDice)
+        {
+            PlayersSet = true;
+        }
+        else
+        {
+            PlayersSet = false;
         }
 
         Debug.Log("Local player character created");

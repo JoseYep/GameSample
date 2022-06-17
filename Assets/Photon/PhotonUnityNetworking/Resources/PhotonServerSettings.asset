@@ -41,6 +41,9 @@ MonoBehaviour:
   - RespawnSpaceship
   - PlayerJoinGame
   - SetDiceNumber
+  - SavePlayerWallet
+  - RPC_PaymentComplete
+  - RPC_JoinedOnRoom
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

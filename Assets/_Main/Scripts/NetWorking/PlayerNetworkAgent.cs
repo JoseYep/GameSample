@@ -14,16 +14,22 @@ public class PlayerNetworkAgent : MonoBehaviourPun
 
     private Button rollButton;
 
+    private string account;
     private int diceNumber = 0; // 1 to 6
     private PhotonView view;
+    private DiceGameManager manager;
 
     #region Properties
     public PhotonView View { get => view; set => view = value; }
     public int DiceNumber { get => diceNumber; set => diceNumber = value; }
+    public string Account { get => account; set => account = value; }
     #endregion
 
     private void Awake()
     {
+        Account = PlayerPrefs.GetString("Account");
+        manager = GameObject.FindObjectOfType<DiceGameManager>();
+
         view = GetComponent<PhotonView>();
         if (view.IsMine)
         {
@@ -43,9 +49,15 @@ public class PlayerNetworkAgent : MonoBehaviourPun
         view.RPC("SetDiceNumber", RpcTarget.All, randomNumber);
     }
 
+    public void SaveAdress()
+    {
+        view.RPC("SavePlayerWallet", RpcTarget.All, account);
+    }
+
     public void PlayerJoined()
     {
         view.RPC("PlayerJoinGame", RpcTarget.All);
+        SaveAdress();
     }
     #endregion
 
@@ -63,6 +75,11 @@ public class PlayerNetworkAgent : MonoBehaviourPun
     {
         onPlayerJoin.Raise(this.gameObject);
     }
-    #endregion
 
+    [PunRPC]
+    private void SavePlayerWallet(string adress)
+    {
+        this.account = adress;
+    }
+    #endregion
 }
