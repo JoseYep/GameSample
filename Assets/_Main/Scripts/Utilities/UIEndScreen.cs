@@ -48,13 +48,29 @@ public class UIEndScreen : MonoBehaviour
 
     private void Claim()
     {
-        smartContract.Claim(winner, loser);
+        smartContract.ClaimReward(winner, loser);
         smartContract.onComplete += Quit;
     }
     
     private void Quit()
     {
-        SceneChanger.instance.LeaveAndCahngeScene(0);
         smartContract.onComplete -= Quit;
+
+        if (SceneChanger.instance)
+        {
+            SceneChanger.instance.LeaveAndCahngeScene(0);
+        }     
+    }
+
+    [ContextMenu("Test losing")]
+    private void TEST_Losing()
+    {
+        titleText.text = "YOU LOSE";
+        buttonText.text = "EXIT";
+
+        if (SceneChanger.instance)
+        {
+            endButton.onClick.AddListener(() => Quit());
+        }
     }
 }

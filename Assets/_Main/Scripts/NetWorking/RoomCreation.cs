@@ -47,7 +47,7 @@ public class RoomCreation : MonoBehaviourPunCallbacks
 
     public void JoinOrCreateRoom(string roomName)
     {
-        smartContract.GetGame();
+        //smartContract.GetGame();
         lastRoomName = roomName;
         string room = (lastRoomName + " " + roomIndex).ToString();
         PhotonNetwork.JoinOrCreateRoom(room, new RoomOptions { IsVisible = true, IsOpen = true, MaxPlayers = (byte)maxPlayers, BroadcastPropsChangeToAll = true }, null);
@@ -73,6 +73,8 @@ public class RoomCreation : MonoBehaviourPunCallbacks
     {      
         host = true;
 
+        statusText.text = "Game created...";
+
         StartCoroutine(InitPlayer(host));
 
         Debug.Log("Game created");
@@ -83,12 +85,22 @@ public class RoomCreation : MonoBehaviourPunCallbacks
         {
             host = false;
 
+            statusText.text = "Game Joined...";
+
             StartCoroutine(InitPlayer(host));
 
             Debug.Log("Game Joined");          
         }
 
         StartCoroutine(ValidateForStart());
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        if (SceneChanger.instance)
+        {
+            SceneChanger.instance.LeaveAndCahngeScene(0);
+        }
     }
 
     private IEnumerator InitPlayer(bool isHost)
@@ -99,6 +111,7 @@ public class RoomCreation : MonoBehaviourPunCallbacks
         
         if (host)
         {
+            statusText.text = "Preparing match...";
             StartCoroutine(DisplayPayment());
         }
 
@@ -153,8 +166,6 @@ public class RoomCreation : MonoBehaviourPunCallbacks
     {
         while (true)
         {
-            statusText.text = "Preparing match, please wait...";
-
             if (playersReady >= 2)
             {
                 statusText.text = "Starting game...";
@@ -181,11 +192,15 @@ public class RoomCreation : MonoBehaviourPunCallbacks
         {
             if (!host)
             {
+                statusText.text = "Paying bet...";
+
                 Debug.Log("Host ready to play");
                 DisplayGuestPayment();
             }
             else
             {
+                statusText.text = "Waiting for opponent...";
+
                 Debug.Log("Waiting for guest to pay");
                 smartContract.onComplete -= localPlayer.PaymentComplete;
             }

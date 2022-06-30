@@ -20,7 +20,7 @@ public class DiceGameManager : MonoBehaviourPunCallbacks
     [SerializeField] private TextMeshProUGUI resultText;
 
     [Header("Smart Contracts")]
-    [SerializeField] private GameSmartContract smartContract;
+    //[SerializeField] private GameSmartContract smartContract;
 
     [Header("UI")]
     [SerializeField] private Button rollButton;

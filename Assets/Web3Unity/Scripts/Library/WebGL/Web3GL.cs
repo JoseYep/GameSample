@@ -19,24 +19,46 @@ public class Web3GL
 
     [DllImport("__Internal")]
     private static extern void SendTransactionJs(string to, string value, string gasLimit, string gasPrice);
+    
+    [DllImport("__Internal")]
+    private static extern void SendTransactionJsData(string to, string value, string gasPrice, string gasLimit, string data);
 
     [DllImport("__Internal")]
     private static extern string SendTransactionResponse();
 
     [DllImport("__Internal")]
     private static extern void SetTransactionResponse(string value);
+    
+    [DllImport("__Internal")]
+    private static extern void SetTransactionResponseData(string value);
 
     [DllImport("__Internal")]
     private static extern void SignMessage(string value);
+    
+    
+    [DllImport("__Internal")]
+    private static extern void HashMessage(string value);
 
     [DllImport("__Internal")]
     private static extern string SignMessageResponse();
+    
+    [DllImport("__Internal")]
+    private static extern string HashMessageResponse();
 
     [DllImport("__Internal")]
     private static extern void SetSignMessageResponse(string value);
+    
+    [DllImport("__Internal")]
+    private static extern void SetHashMessageResponse(string value);
 
     [DllImport("__Internal")]
     private static extern int GetNetwork();
+
+    [DllImport("__Internal")]
+    private static extern void Test();
+
+    [DllImport("__Internal")]
+    private static extern string CustomSign(string winner, string loser, string gameID, string key);
 
     // this function will create a metamask tx for user to confirm.
     async public static Task<string> SendContract(string _method, string _abi, string _contract, string _args, string _value, string _gasLimit = "", string _gasPrice = "")
@@ -84,6 +106,29 @@ public class Web3GL
             throw new Exception(response);
         }
     }
+    
+    async public static Task<string> SendTransactionData(string _to, string _value,  string _gasPrice = "",string _gasLimit = "", string _data = "")
+    {
+        // Set response to empty
+        SetTransactionResponse("");
+        SendTransactionJsData(_to, _value, _gasPrice,_gasLimit,_data);
+        string response = SendTransactionResponse();
+        while (response == "")
+        {
+            await new WaitForSeconds(1f);
+            response = SendTransactionResponse();
+        }
+        SetTransactionResponse("");
+        // check if user submmited or user rejected
+        if (response.Length == 66) 
+        {
+            return response;
+        } 
+        else 
+        {
+            throw new Exception(response);
+        }
+    }
 
     async public static Task<string> Sign(string _message)
     {
@@ -106,11 +151,47 @@ public class Web3GL
             throw new Exception(response);
         }
     }
+    
+    async public static Task<string> Sha3(string _message)
+    {
+        HashMessage(_message);
+        SetHashMessageResponse("");
+        try
+        {
+            await new WaitForSeconds(1f);
+            string response = HashMessageResponse();
+            return response;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            throw;
+        }
+    }
 
     public static int Network()
     {
         return GetNetwork();
     }
 
+    public static void TestThisShit()
+    {
+        Test();
+    }
+
+    async public static Task<string> GetCustomSign(string winner,string loser,string gameID,string key)
+    {       
+        try
+        {
+            await new WaitForSeconds(1f);
+            string response = CustomSign(winner,loser,gameID,key);
+            return response;
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+            throw;
+        }
+    }
 }
 #endif
