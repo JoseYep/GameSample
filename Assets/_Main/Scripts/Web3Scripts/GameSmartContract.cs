@@ -67,7 +67,7 @@ public class GameSmartContract : MonoBehaviour
             Debug.Log("Crating new game with bet: " + money);
             string[] parameters = {money.ToString()};
             string args = JsonConvert.SerializeObject(parameters);
-            string val = money.ToString();//(money * 10).ToString();
+            string val = (money + 100).ToString();
 
             string response = await Web3GL.SendContract("createGame", abiContract, contract, args, val , gasLimit, gasPrice);
 
@@ -102,9 +102,10 @@ public class GameSmartContract : MonoBehaviour
             //gasLimit = "75000";
 
             Debug.Log("Joining game: " + gameId + " with bet: " + money);
-            string[] parameters = { money.ToString(), gameId };
+            string[] parameters = {money.ToString(), gameId };
             string args = JsonConvert.SerializeObject(parameters);
-            string val = money.ToString();//(money * 10).ToString();
+            string val = (money + 100).ToString();
+            
             string response = await Web3GL.SendContract("joinGame", abiContract, contract, args , val ,gasLimit, gasPrice);
             
             CheckStatus(response);
